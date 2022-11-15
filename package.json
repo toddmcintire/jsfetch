@@ -1,18 +1,19 @@
 {
-  "name": "jsfetch",
+  "name": "jsfetch-term",
   "version": "1.0.0",
-  "description": "neofetch replacement in javascript",
-  "main": "index.mjs",
+  "description": "neofetch clone in javascript",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "test": "node index.js"
+    "build": "node bin/app.js",
+    "test": "echo \"No test specified\""
   },
   "repository": {
     "type": "git",
-    "url": "test"
+    "url": "https://github.com/toddmcintire/jsfetch"
   },
   "author": "Todd McIntire",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "dependencies": {
     "chalk": "^5.0.1"
   }
