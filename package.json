@@ -1,0 +1,19 @@
+{
+  "name": "jsfetch",
+  "version": "1.0.0",
+  "description": "neofetch replacement in javascript",
+  "main": "index.mjs",
+  "type": "module",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "test"
+  },
+  "author": "Todd McIntire",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.0.1"
+  }
+}
