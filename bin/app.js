@@ -1,5 +1,5 @@
-import * as child from 'node:child_process';
-import * as os from 'node:os';
+import { spawnSync } from 'node:child_process';
+import { platform, userInfo, hostname, arch, uptime, release, version } from 'node:os';
 import chalk from 'chalk';
 
 /**
@@ -10,11 +10,11 @@ function packages(platform) {
 	
 	//if mac os
 	if (platform === 'darwin') {
-		let directory = child.spawnSync('brew', ['--cellar'], { encoding : 'utf8' });
+		let directory = spawnSync('brew', ['--cellar'], { encoding : 'utf8' });
 		let myVar = directory.output[1];
 		let fullText = `${myVar} | wc -l`;
 		let replaced = fullText.replace(/\n|\r/g, "");
-		return child.spawnSync('ls', [replaced], {shell: true, encoding: 'utf8'}).output[1].trim();
+		return spawnSync('ls', [replaced], {shell: true, encoding: 'utf8'}).output[1].trim();
 	} 
 	
 	else if (platform === "win32") {
@@ -30,19 +30,17 @@ function timeConvert(time) {
 	let min = time / 60;
 	let hour = time / 3600;
 	let day = time / 86400;
-	return `time is seconds ${time}, min: ${min}, hour: ${hour}, day: ${day} `;
+	return `time is minuet's: ${Math.floor(min)}, hour's: ${Math.floor(hour)}, day's: ${Math.floor(day)} `;
 }
 
 /**
  * returns the users shell.
  */
 function shellCheck(platform) {
-	if (platform === 'darwin'){
-		return child.spawnSync(`echo`,['"$SHELL"'], {shell: true, encoding : 'utf8' }).output[1].trim();
-	}
+	if (platform === 'darwin'){return spawnSync(`echo`,['"$SHELL"'], {shell: true, encoding : 'utf8' }).output[1].trim();}
 
 	else if (platform ==='win32') {
-		let shell = child.spawnSync('$host.Name', {encoding : 'utf8'})
+		let shell = spawnSync('$host.Name', {encoding : 'utf8'})
 		if (shell.output === null) {
 			return "CMD"
 		} else if (shell.output[1].trim() === "ConsoleHost") {
@@ -57,12 +55,12 @@ function getResolution(platform) {
 	//based on platform issue command that gets screen resolution and then 
 	if (platform === 'darwin') {
 		const fullText = 'SPDisplaysDataType |grep Resolution';
-		return child.spawnSync('system_profiler', [`${fullText}`], {shell: true, encoding: 'utf8'}).output[1].trim();
+		return spawnSync('system_profiler', [`${fullText}`], {shell: true, encoding: 'utf8'}).output[1].trim();
 	}
 
 	else if (platform === 'win32') {
-		let height = child.spawnSync('wmic', ['desktopmonitor', 'get', 'screenheight'], {encoding : 'utf8'});
-		let width = child.spawnSync('wmic', ['desktopmonitor', 'get', 'screenwidth'], {encoding : 'utf8'});
+		let height = spawnSync('wmic', ['desktopmonitor', 'get', 'screenheight'], {encoding : 'utf8'});
+		let width = spawnSync('wmic', ['desktopmonitor', 'get', 'screenwidth'], {encoding : 'utf8'});
 		return String(width.output[1].trim().replace( /^\D+/g, '')) + "x"+ String(height.output[1].trim().replace( /^\D+/g, ''));
 	}
 }
@@ -72,11 +70,8 @@ function getResolution(platform) {
  * @param {string} platform - devices platform.
  */
 function getCPU(platform) {
-	if (platform === 'darwin') {return macCPU()}
-	
-	function macCPU() {
-		const cpuCommand = child.spawnSync('sysctl', ['-n machdep.cpu.brand_string'], {shell: true, encoding: 'utf8'});
-		return cpuCommand.output[1].trim(); 
+	if (platform === 'darwin') {return spawnSync('sysctl', ['-n machdep.cpu.brand_string'], {shell: true, encoding: 'utf8'}).output[1].trim()};
+	if (platform === 'win32') {//TODO: return cpu
 	}
 }
 
@@ -85,20 +80,15 @@ function getCPU(platform) {
  * @param {string} platform - devices platform.
  */
  function getGPU(platform) {
-	if (platform === 'darwin') {return macGPU()}
-	if (platform === 'win32') {return windowsGPU()}
-	
-	function macGPU() {
+	if (platform === 'darwin') {
 		const fullText = 'SPDisplaysDataType |grep Chipset';
-		return child.spawnSync('system_profiler', [`${fullText}`], {shell: true, encoding: 'utf8'}).output[1].trim();
+		return spawnSync('system_profiler', [`${fullText}`], {shell: true, encoding: 'utf8'}).output[1].trim();
 	}
-
-	function windowsGPU() {
-		let gpu = child.spawnSync('wmic', ['path', 'win32_videoController', 'get', 'name'], {encoding : 'utf8'});
-		var lines = gpu.output[1].split('\n');
-		lines.splice(0,1);
-		lines.splice(1,2);
-		return lines.join('\n').trim();
+	if (platform === 'win32') {
+		let gpu = spawnSync('wmic', ['path', 'win32_videoController', 'get', 'name'], {encoding : 'utf8'}).output[1].split('\n');
+		gpu.splice(0,1);
+		gpu.splice(1,2);
+		return gpu.join('\n').trim();
 	}
 }
 
@@ -107,16 +97,12 @@ function getCPU(platform) {
  * @param {string} platform - devices platform.
  */
  function getMemory(platform) {
-	if (platform === 'darwin') {return macMemory()}
-	
-	function macMemory() {
+	if (platform === 'darwin') {
 		const fullText = 'SPHardwareDataType |grep Memory';
-		return child.spawnSync('system_profiler', [`${fullText}`], {shell: true, encoding: 'utf8'}).output[1].trim();
+		return spawnSync('system_profiler', [`${fullText}`], {shell: true, encoding: 'utf8'}).output[1].trim();
 	}
-
-	function windowsMemory() {
-		
-	}
+	// if (platform === 'win32') {//TODO: return windows memory
+	// }
 }
 
 function displayLogo(platform) {
@@ -142,14 +128,14 @@ function displayLogo(platform) {
 	}
 }
 
-let name = os.platform()
-console.log(chalk.yellow(`${displayLogo(name)}`));
+let name = platform()
+console.log(chalk.cyan(`${displayLogo(name)}`));
 //TODO: seperate logo from rest of information
-console.log(chalk.yellow(`${os.userInfo().username}@${os.hostname()}`));
+console.log(chalk.yellow(`${userInfo().username}@${hostname()}`));
 console.log('-----------------');
-console.log(chalk.blue(`OS: ${name} ${os.release()} ${os.arch()}`));
-console.log(chalk.red(`Kernel: ${os.version()}`));
-console.log(chalk.red(`Uptime: ${timeConvert(os.uptime())}`));
+console.log(chalk.blue(`OS: ${name} ${release()} ${arch()}`));
+console.log(chalk.red(`Kernel: ${version()}`));
+console.log(chalk.red(`Uptime: ${timeConvert(uptime())}`));
 console.log(chalk.yellow(`packages: ${packages(name)}`));
 console.log(chalk.yellow(`shell: ${shellCheck(name)}`));
 console.log(chalk.yellow(`${getResolution(name)}`));
