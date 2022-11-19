@@ -8,6 +8,9 @@
     "build": "node bin/app.js",
     "test": "echo \"No test specified\""
   },
+  "bin": {
+    "jsfetch": "./bin/app.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/toddmcintire/jsfetch"

@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 import { spawnSync } from 'node:child_process';
 import { platform, userInfo, hostname, arch, uptime, release, version } from 'node:os';
 import chalk from 'chalk';
