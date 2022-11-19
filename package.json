@@ -1,6 +1,6 @@
 {
   "name": "jsfetch-term",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "neofetch clone in javascript",
   "main": "app.js",
   "type": "module",
@@ -16,5 +16,9 @@
   "license": "GPL-3.0",
   "dependencies": {
     "chalk": "^5.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.28.0",
+    "prettier": "^2.7.1"
   }
 }
