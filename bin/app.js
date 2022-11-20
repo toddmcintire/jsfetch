@@ -9,6 +9,7 @@ import {
 	uptime,
 	release,
 	version,
+	totalmem,
 } from 'node:os';
 import chalk from 'chalk';
 import * as logos from './os-logos.js';
@@ -172,4 +173,7 @@ console.log(chalk.yellow(`${getResolution(name)}`));
 // TODO:terminal font
 console.log(chalk.yellow(`CPU: ${getCPU(name)}`));
 console.log(chalk.yellow(`GPU: ${getGPU(name)}`));
-console.log(chalk.yellow(`Memory: ${getMemory(name)}`));
+// console.log(chalk.yellow(`Memory: ${getMemory(name)}`));
+let memory = totalmem().toLocaleString();
+let formatedMemory = `${memory.split('.')[0]}GB`;
+console.log(chalk.yellow(`Memory: ${memory} - ${formatedMemory}`));
