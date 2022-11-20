@@ -11,6 +11,7 @@ import {
 	version,
 } from 'node:os';
 import chalk from 'chalk';
+import * as logos from './os-logos.js';
 
 /**
  * returns a number of the currently installed packages on a system.
@@ -150,27 +151,8 @@ function getMemory(platform) {
 	// }
 }
 
-function displayLogo(platform) {
-	if (platform === 'darwin') {
-		const logo = `	  	    'c.
-		 ,xNMM.
-	       .OMMMMo
-               OMMM0,
-     .;loddo:.  .olloddol;.
-   cKMMMMMMMMMMNWMMMMMMMMMM0:
- .KMMMMMMMMMMMMMMMMMMMMMMMWd.
- XMMMMMMMMMMMMMMMMMMMMMMMX.
-;MMMMMMMMMMMMMMMMMMMMMMMM:
-:MMMMMMMMMMMMMMMMMMMMMMMM:
-.MMMMMMMMMMMMMMMMMMMMMMMMX.
- kMMMMMMMMMMMMMMMMMMMMMMMMWd.
- .XMMMMMMMMMMMMMMMMMMMMMMMMMMk
-  .XMMMMMMMMMMMMMMMMMMMMMMMMK.
-    kMMMMMMMMMMMMMMMMMMMMMMd
-     ;KMMMMMMMWXXWMMMMMMMk.
-       .cooc,.    .,coo:.`;
-		return logo;
-	}
+function displayLogo(OS) {
+	return logos[OS] || ':::OS LOGO:::';
 }
 
 const name = platform();
