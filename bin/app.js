@@ -9,6 +9,7 @@ import {
 	uptime,
 	release,
 	version,
+	totalmem,
 } from 'node:os';
 import chalk from 'chalk';
 import * as logos from './os-logos.js';
@@ -136,21 +137,17 @@ function getGPU(platform) {
 }
 
 /**
- * returns a string of the systems memory.
- * @param {string} platform - devices platform.
+ * returns a rounded number of the users total installed memory in GB
+ * @param {number} memoryInt - total memory of system in bytes.
  */
-function getMemory(platform) {
-	if (platform === 'darwin') {
-		const fullText = 'SPHardwareDataType |grep Memory';
-		return spawnSync('system_profiler', [`${fullText}`], {
-			shell: true,
-			encoding: 'utf8',
-		}).output[1].trim();
-	}
-	// if (platform === 'win32') {//TODO: return windows memory
-	// }
+function displayMemory(memoryInt) {
+	return Math.floor(Math.floor(memoryInt / 1000000) / 1024);
 }
 
+/**
+ * returns a system logo
+ * @param {string} OS - devices platform.
+ */
 function displayLogo(OS) {
 	return logos[OS] || ':::OS LOGO:::';
 }
@@ -172,4 +169,4 @@ console.log(chalk.yellow(`${getResolution(name)}`));
 // TODO:terminal font
 console.log(chalk.yellow(`CPU: ${getCPU(name)}`));
 console.log(chalk.yellow(`GPU: ${getGPU(name)}`));
-console.log(chalk.yellow(`Memory: ${getMemory(name)}`));
+console.log(chalk.yellow(`Memory: ${displayMemory(totalmem())}GB`));
