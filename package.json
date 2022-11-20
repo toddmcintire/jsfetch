@@ -1,12 +1,15 @@
 {
   "name": "jsfetch-term",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "neofetch clone in javascript",
   "main": "app.js",
   "type": "module",
   "scripts": {
     "build": "node bin/app.js",
     "test": "echo \"No test specified\""
+  },
+  "bin": {
+    "jsfetch": "./bin/app.js"
   },
   "repository": {
     "type": "git",
