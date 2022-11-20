@@ -169,6 +169,26 @@ function displayLogo(platform) {
        .cooc,.    .,coo:.`;
 		return logo;
 	}
+	if (platform === 'win32') {
+		const logo = `'OOkkxxxdoo'
+                 'xxxxddooolllllllllll'
+         ooolllk:0olollloooollllllllll'
+.oolllollllllllk:0oloolllollllllllllll'
+.llllllllllllllk:0olllllllllllllllllll'
+.ooolllllllllllk:0ollollloolllllllllll'
+.oooollllllllllk:0olllllllolllllllllll'
+.llllllllllllllk:0oollllllollooloooooo'
+'''''''''''''''' ''''''''''''''''''''''
+.xxxxxxxxxxxxxx0:kxxxxxxxxxxxxxxxxxxkk:
+.llllllllllllllk:ollllllllllllllllllll:
+.llllllllllllllk:ollllllloolllllllllll:
+.llllllllllllllk:ollllllooollllollllll:
+.llllllllllllllk:ollllllooolllllllllol:
+  ''lllllllllllk:olollooooolllllllllol.
+        'Okkxxx0:dllllllollllooollllll.
+                  'KK00Okkkxxddooollol.
+                             'XKOOkkxd.`
+		return logo;
 }
 
 const name = platform();
