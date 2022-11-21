@@ -51,11 +51,8 @@ function timeConvert(time) {
  * returns the users shell.
  */
 function shellCheck(platform) {
-	if (platform === 'darwin') {
-		return spawnSync(`echo`, ['"$SHELL"'], {
-			shell: true,
-			encoding: 'utf8',
-		}).output[1].trim();
+	if (platform === 'darwin' || platform === 'linux') {
+		return userInfo(['utf8']).shell;
 	}
 	if (platform === 'win32') {
 		const shell = spawnSync('$host.Name', { encoding: 'utf8' });
