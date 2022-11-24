@@ -16,11 +16,11 @@ import * as logos from './os-logos.js';
 
 /**
  * returns a number of the currently installed packages on a system.
- * @param {string} platform - devices platform.
+ * @param {string} OS - devices platform.
  */
-function packages(platform) {
+function packages(OS) {
 	// if mac os
-	if (platform === 'darwin') {
+	if (OS === 'darwin') {
 		const directory = spawnSync('brew', ['--cellar'], { encoding: 'utf8' });
 		const myVar = directory.output[1];
 		const fullText = `${myVar} | wc -l`;
@@ -30,9 +30,24 @@ function packages(platform) {
 			encoding: 'utf8',
 		}).output[1].trim();
 	}
-	if (platform === 'win32') {
-		return 'not supported';
+
+	// Pass on my VM running Xubuntu
+	if (OS === 'linux') {
+		try {
+			const aptList = spawnSync('apt', ['list', '--installed'], {
+				encoding: 'utf8',
+			});
+			return aptList.output[1].match(/\n/g).length - 1;
+		} catch (err) {
+			return 'distribution not supported ';
+		}
 	}
+
+	if (OS === 'win32') {
+		// return 'not supported';
+	}
+
+	return 'not supported';
 }
 
 /**
