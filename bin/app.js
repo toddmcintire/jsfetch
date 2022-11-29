@@ -13,6 +13,7 @@ import {
 } from 'node:os';
 import chalk from 'chalk';
 import * as logos from './os-logos.js';
+import { argv } from 'node:process';
 
 /**
  * returns a number of the currently installed packages on a system.
@@ -165,20 +166,78 @@ function displayLogo(OS) {
 }
 
 const name = platform();
-console.log(chalk.cyan(`${displayLogo(name)}`));
-// TODO: separate logo from rest of information
-console.log(chalk.yellow(`${userInfo().username}@${hostname()}`));
-console.log('-----------------');
-console.log(chalk.blue(`OS: ${name} ${release()} ${arch()}`));
-console.log(chalk.red(`Kernel: ${version()}`));
-console.log(chalk.red(`Uptime: ${timeConvert(uptime())}`));
-console.log(chalk.yellow(`packages: ${packages(name)}`));
-console.log(chalk.yellow(`shell: ${shellCheck(name)}`));
-console.log(chalk.yellow(`${getResolution(name)}`));
-// TODO:desktop environment
-// TODO:window manager
-// TODO:terminal
-// TODO:terminal font
-console.log(chalk.yellow(`CPU: ${getCPU(name)}`));
-console.log(chalk.yellow(`GPU: ${getGPU(name)}`));
-console.log(chalk.yellow(`Memory: ${displayMemory(totalmem())}GB`));
+const colors = [
+	'red',
+	'green',
+	'yellow',
+	'blue',
+	'magenta',
+	'cyan',
+	'white',
+	'gray',
+	'black',
+	'rainbow',
+];
+const choice = argv[2];
+
+if (colors.includes(choice) === true) {
+	if (choice === 'rainbow') {
+		console.log(chalk.red(`${displayLogo(name)}`));
+		// TODO: separate logo from rest of information
+		console.log(chalk.red(`${userInfo().username}@${hostname()}`));
+		console.log('-----------------');
+		console.log(chalk.rgb(255, 87, 51)(`OS: ${name} ${release()} ${arch()}`));
+		console.log(chalk.rgb(255, 87, 51)(`Kernel: ${version()}`));
+		console.log(chalk.yellow(`Uptime: ${timeConvert(uptime())}`));
+		console.log(chalk.yellow(`packages: ${packages(name)}`));
+		console.log(chalk.green(`shell: ${shellCheck(name)}`));
+		console.log(chalk.green(`${getResolution(name)}`));
+		// TODO:desktop environment
+		// TODO:window manager
+		// TODO:terminal
+		// TODO:terminal font
+		console.log(chalk.blue(`CPU: ${getCPU(name)}`));
+		console.log(chalk.blue(`GPU: ${getGPU(name)}`));
+		console.log(
+			chalk.rgb(143, 0, 255)(`Memory: ${displayMemory(totalmem())}GB`)
+		);
+	} else {
+		console.log(chalk[choice](`${displayLogo(name)}`));
+		// TODO: separate logo from rest of information
+		console.log(chalk[choice](`${userInfo().username}@${hostname()}`));
+		console.log('-----------------');
+		console.log(chalk[choice](`OS: ${name} ${release()} ${arch()}`));
+		console.log(chalk[choice](`Kernel: ${version()}`));
+		console.log(chalk[choice](`Uptime: ${timeConvert(uptime())}`));
+		console.log(chalk[choice](`packages: ${packages(name)}`));
+		console.log(chalk[choice](`shell: ${shellCheck(name)}`));
+		console.log(chalk[choice](`${getResolution(name)}`));
+		// TODO:desktop environment
+		// TODO:window manager
+		// TODO:terminal
+		// TODO:terminal font
+		console.log(chalk[choice](`CPU: ${getCPU(name)}`));
+		console.log(chalk[choice](`GPU: ${getGPU(name)}`));
+		console.log(chalk[choice](`Memory: ${displayMemory(totalmem())}GB`));
+	}
+} else if (choice === undefined) {
+	console.log(chalk.cyan(`${displayLogo(name)}`));
+	// TODO: separate logo from rest of information
+	console.log(chalk.yellow(`${userInfo().username}@${hostname()}`));
+	console.log('-----------------');
+	console.log(chalk.blue(`OS: ${name} ${release()} ${arch()}`));
+	console.log(chalk.red(`Kernel: ${version()}`));
+	console.log(chalk.red(`Uptime: ${timeConvert(uptime())}`));
+	console.log(chalk.yellow(`packages: ${packages(name)}`));
+	console.log(chalk.yellow(`shell: ${shellCheck(name)}`));
+	console.log(chalk.yellow(`${getResolution(name)}`));
+	// TODO:desktop environment
+	// TODO:window manager
+	// TODO:terminal
+	// TODO:terminal font
+	console.log(chalk.yellow(`CPU: ${getCPU(name)}`));
+	console.log(chalk.yellow(`GPU: ${getGPU(name)}`));
+	console.log(chalk.yellow(`Memory: ${displayMemory(totalmem())}GB`));
+} else {
+	console.log('color not supported', choice);
+}
