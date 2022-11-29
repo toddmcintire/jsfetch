@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import { spawnSync } from 'node:child_process';
+import { spawnSync, execSync } from 'node:child_process';
 import {
 	platform,
 	userInfo,
@@ -105,6 +105,28 @@ function getResolution(platform) {
 		return `${String(width.output[1].trim().replace(/^\D+/g, ''))}x${String(
 			height.output[1].trim().replace(/^\D+/g, '')
 		)}`;
+	}
+	if (platform === 'linux') {
+		let response;
+		try {
+			response = execSync(`xrandr --current | grep '*'`).toString();
+		} catch (error) {
+			// console.log(error);
+		}
+
+		if (!response) {
+			try {
+				response = execSync(`xdpyinfo | grep dimensions`).toString();
+			} catch (error) {
+				// console.log(error);
+				return undefined;
+			}
+		}
+		const pattern = /\d*x\d*/;
+		const data = response;
+		const result = data.match(pattern);
+		const resolution = result[0];
+		return resolution;
 	}
 }
 
