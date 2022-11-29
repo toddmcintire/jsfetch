@@ -1,6 +1,6 @@
 {
   "name": "jsfetch-term",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "neofetch clone in javascript",
   "main": "app.js",
   "type": "module",
