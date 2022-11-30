@@ -180,64 +180,115 @@ const colors = [
 ];
 const choice = argv[2];
 
-if (colors.includes(choice) === true) {
+let componentsWithColorsToDisplay = [];
+let noSupportedColor = false;
+
+// TODO: separate logo from rest of information
+// TODO:desktop environment
+// TODO:window manager
+// TODO:terminal
+// TODO:terminal font
+
+if (colors.includes(choice)) {
 	if (choice === 'rainbow') {
-		console.log(chalk.red(`${displayLogo(name)}`));
-		// TODO: separate logo from rest of information
-		console.log(chalk.red(`${userInfo().username}@${hostname()}`));
-		console.log('-----------------');
-		console.log(chalk.rgb(255, 87, 51)(`OS: ${name} ${release()} ${arch()}`));
-		console.log(chalk.rgb(255, 87, 51)(`Kernel: ${version()}`));
-		console.log(chalk.yellow(`Uptime: ${timeConvert(uptime())}`));
-		console.log(chalk.yellow(`packages: ${packages(name)}`));
-		console.log(chalk.green(`shell: ${shellCheck(name)}`));
-		console.log(chalk.green(`${getResolution(name)}`));
-		// TODO:desktop environment
-		// TODO:window manager
-		// TODO:terminal
-		// TODO:terminal font
-		console.log(chalk.blue(`CPU: ${getCPU(name)}`));
-		console.log(chalk.blue(`GPU: ${getGPU(name)}`));
-		console.log(
-			chalk.rgb(143, 0, 255)(`Memory: ${displayMemory(totalmem())}GB`)
-		);
-	} else {
-		console.log(chalk[choice](`${displayLogo(name)}`));
-		// TODO: separate logo from rest of information
-		console.log(chalk[choice](`${userInfo().username}@${hostname()}`));
-		console.log('-----------------');
-		console.log(chalk[choice](`OS: ${name} ${release()} ${arch()}`));
-		console.log(chalk[choice](`Kernel: ${version()}`));
-		console.log(chalk[choice](`Uptime: ${timeConvert(uptime())}`));
-		console.log(chalk[choice](`packages: ${packages(name)}`));
-		console.log(chalk[choice](`shell: ${shellCheck(name)}`));
-		console.log(chalk[choice](`${getResolution(name)}`));
-		// TODO:desktop environment
-		// TODO:window manager
-		// TODO:terminal
-		// TODO:terminal font
-		console.log(chalk[choice](`CPU: ${getCPU(name)}`));
-		console.log(chalk[choice](`GPU: ${getGPU(name)}`));
-		console.log(chalk[choice](`Memory: ${displayMemory(totalmem())}GB`));
+		componentsWithColorsToDisplay = [
+			chalk.red(`${userInfo().username}@${hostname()}`),
+			'-----------------',
+			chalk.rgb(255, 87, 51)(`OS: ${name} ${release()} ${arch()}`),
+			chalk.rgb(255, 87, 51)(`Kernel: ${version()}`),
+			chalk.yellow(`Uptime: ${timeConvert(uptime())}`),
+			chalk.yellow(`packages: ${packages(name)}`),
+			chalk.green(`shell: ${shellCheck(name)}`),
+			chalk.green(`${getResolution(name)}`),
+			chalk.blue(`CPU: ${getCPU(name)}`),
+			chalk.blue(`GPU: ${getGPU(name)}`),
+			chalk.rgb(143, 0, 255)(`Memory: ${displayMemory(totalmem())}GB`),
+		];
 	}
-} else if (choice === undefined) {
-	console.log(chalk.cyan(`${displayLogo(name)}`));
-	// TODO: separate logo from rest of information
-	console.log(chalk.yellow(`${userInfo().username}@${hostname()}`));
-	console.log('-----------------');
-	console.log(chalk.blue(`OS: ${name} ${release()} ${arch()}`));
-	console.log(chalk.red(`Kernel: ${version()}`));
-	console.log(chalk.red(`Uptime: ${timeConvert(uptime())}`));
-	console.log(chalk.yellow(`packages: ${packages(name)}`));
-	console.log(chalk.yellow(`shell: ${shellCheck(name)}`));
-	console.log(chalk.yellow(`${getResolution(name)}`));
-	// TODO:desktop environment
-	// TODO:window manager
-	// TODO:terminal
-	// TODO:terminal font
-	console.log(chalk.yellow(`CPU: ${getCPU(name)}`));
-	console.log(chalk.yellow(`GPU: ${getGPU(name)}`));
-	console.log(chalk.yellow(`Memory: ${displayMemory(totalmem())}GB`));
-} else {
-	console.log('color not supported', choice);
+	else {
+		componentsWithColorsToDisplay = [
+			chalk[choice](`${userInfo().username}@${hostname()}`),
+			'-----------------',
+			chalk[choice](`OS: ${name} ${release()} ${arch()}`),
+			chalk[choice](`Kernel: ${version()}`),
+			chalk[choice](`Uptime: ${timeConvert(uptime())}`),
+			chalk[choice](`packages: ${packages(name)}`),
+			chalk[choice](`shell: ${shellCheck(name)}`),
+			chalk[choice](`${getResolution(name)}`),
+			chalk[choice](`CPU: ${getCPU(name)}`),
+			chalk[choice](`GPU: ${getGPU(name)}`),
+			chalk[choice](`Memory: ${displayMemory(totalmem())}GB`),
+		];
+	}
+	
+}
+else if (!choice) {
+	componentsWithColorsToDisplay = [
+		chalk.yellow(`${userInfo().username}@${hostname()}`),
+		'-----------------',
+		chalk.blue(`OS: ${name} ${release()} ${arch()}`),
+		chalk.red(`Kernel: ${version()}`),
+		chalk.red(`Uptime: ${timeConvert(uptime())}`),
+		chalk.yellow(`packages: ${packages(name)}`),
+		chalk.yellow(`shell: ${shellCheck(name)}`),
+		chalk.yellow(`${getResolution(name)}`),
+		chalk.yellow(`CPU: ${getCPU(name)}`),
+		chalk.yellow(`GPU: ${getGPU(name)}`),
+		chalk.yellow(`Memory: ${displayMemory(totalmem())}GB`),
+	];
+}
+else {
+	noSupportedColor = true;
+	console.log('******************************');
+	console.log('color not supported: ', choice);
+	console.log('******************************');
+}
+
+//If the user selected a supported color then we print the info
+if (!noSupportedColor) {
+	printInfo(componentsWithColorsToDisplay, name);
+}
+
+/**
+ * Method to print the info simulating to columns, the first one with the logo of 
+ * the SO and the second with the user computer info
+ * @param {array} listOfComponents List of the components to print next to the logo
+ * @param {string} namePlatform Name of the user platform (SO)
+ */
+function printInfo(listOfComponents, namePlatform) {
+
+	let logosColors = {
+		'darwin': 'white',
+		'linux': 'yellow',
+		'win32': 'cyan',
+	}
+
+	let platformLogo = displayLogo(namePlatform);
+
+	/* 
+		Check which array is longer, because there is the case like with linux where the logo is
+		smaller than the system info
+	*/
+	let leng = platformLogo.length > listOfComponents.length ? platformLogo.length : listOfComponents.length;
+
+	let longestPartLogo = 0;
+
+	for(let i = 0; i < leng; i++) {
+		//Get line of platform logo
+		let logoPortion = platformLogo[i];
+		//Get component to show
+		let component = listOfComponents[i];
+
+		//If we are still printing the logo we are going to check if this is the longest part of the logo
+		if (logoPortion) {
+			let lengthOfLogoPortion = logoPortion.split('').length;
+			//If the length of this portion is greater than the one we have stored, store this one
+			if (lengthOfLogoPortion > longestPartLogo) longestPartLogo = lengthOfLogoPortion;
+		}
+		let logoPart = logoPortion ? chalk[logosColors[namePlatform]](`${logoPortion}`) : ' '.repeat(longestPartLogo);
+		let componentPart = (component ? component : '');
+
+		//Print the logo and next to it the component
+		console.log(`${logoPart}\t${componentPart}`);
+	}
 }
